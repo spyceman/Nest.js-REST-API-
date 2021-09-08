@@ -1,0 +1,36 @@
+version: '3.0'
+
+services: 
+ main:
+  container_name: main
+  build: 
+   context: .
+   env_file: 
+   - .env
+  volumes: 
+  - .:/app
+  - /app/node_modules
+  ports: 
+  - 3000:3000
+  command: 
+  - npm run start:dev
+  depends_on: 
+  - mongo
+  restart: always
+mongo:
+  container_name: mongo
+  image: mongo
+  env_file: 
+  - .env
+  environment:
+      MONGO_INITDB_ROOT_USERNAME: bijomo
+      MONGO_INITDB_ROOT_PASSWORD: 1234
+mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: bijomo
+      ME_CONFIG_MONGODB_ADMINPASSWORD: 1234
+      ME_CONFIG_MONGODB_URL: mongodb+srv://bijomo:1234@cluster0.kkgke.mongodb.net/users?retryWrites=true&w=majority
